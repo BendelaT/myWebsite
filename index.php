@@ -1,7 +1,7 @@
 <?php
 
-$pdo = new PDO("mysql:host=localhost;port=3306;dbname=mywebsite", "root", "");
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+include "mysql_connect.php";
+
 
 $statement = $pdo->prepare("SELECT * FROM products");
 $statement->execute();
@@ -45,31 +45,26 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
                     <td> <?php echo $product["name"] ?></td>
                     <td> <?php echo $product["price"] ?> <span>$</span></td>
                     <td> <?php if (empty($product["size"])) {
-                                echo "";
                             } else {
                                 echo "Size: ", $product["size"], " MB";
                             } ?></td>
                     <td> <?php if (empty($product["weight"])) {
-                                echo "";
                             } else {
                                 echo "Weight: ", $product["weight"], " KG";
                             } ?></td>
                     <td> <?php if (empty($product["height"]) && empty($product["width"]) && empty($product["length"])) {
-                                echo "";
                             } else {
                                 echo "Dimension: ", $product["height"], "x", $product["width"], "x", $product["length"];
                             } ?></td>
+
                 </tr>
             <?php endforeach; ?>
         </table>
     </form>
-    <footer>
-        <div class="footer_rect"></div>
 
-        <p>Scandiweb Test assignment</p>
+    <footer class="py-3 my-4">
+        <p class="text-center text-muted border-top">Scandiweb Test assignment</p>
     </footer>
-
-
 </body>
 
 </html>

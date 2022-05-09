@@ -1,7 +1,6 @@
 <?php
 
-$pdo = new PDO("mysql:host=localhost;port=3306;dbname=mywebsite", "root", "");
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+include "mysql_connect.php";
 
 
 $sku = "";
@@ -15,15 +14,48 @@ $length = "";
 
 
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $sku = $_POST["sku"];
-    $name = $_POST["name"];
-    $price = $_POST["price"];
-    $size = $_POST["size"];
-    $weight = $_POST["weight"];
-    $height = $_POST["height"];
-    $width = $_POST["width"];
-    $length = $_POST["length"];
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($_POST["sku"])) {
+        $sku = "";
+    } else {
+        $sku = $_POST["sku"];
+    }
+    if (empty($_POST["name"])) {
+        $name = "";
+    } else {
+        $name = $_POST["name"];
+    }
+    if (empty($_POST["price"])) {
+        $price = 0;
+    } else {
+        $price = $_POST["price"];
+    }
+    if (empty($_POST["size"])) {
+        $size = 0;
+    } else {
+        $size = $_POST["size"];
+    }
+    if (empty($_POST["weight"])) {
+        $weight = 0;
+    } else {
+        $weight = $_POST["weight"];
+    }
+    if (empty($_POST["height"])) {
+        $height = 0;
+    } else {
+        $height = $_POST["height"];
+    }
+    if (empty($_POST["width"])) {
+        $width = 0;
+    } else {
+        $width = $_POST["width"];
+    }
+    if (empty($_POST["length"])) {
+        $length = 0;
+    } else {
+        $length = $_POST["length"];
+    }
 
 
 
@@ -39,8 +71,6 @@ VALUE (:sku, :name, :price, :size, :weight, :height, :width, :length)"
     $statement->bindValue(":height", $height);
     $statement->bindValue(":width", $width);
     $statement->bindValue(":length", $length);
-
-
 
     $statement->execute();
     header("Location: index.php");
@@ -82,34 +112,37 @@ VALUE (:sku, :name, :price, :size, :weight, :height, :width, :length)"
             <input class="form-control top_input" type="number" name="price">
         </div>
         <div class="form_group type_switcher">
-            <label>Type Switcher</label>
-            <select oninput="myFunc()" name="typeSwitcher" id="productType" class="form-select" aria-label="Default select example">
-                <option id="selectedOpt" selected>Type Switcher</option>
+            <select onchange="hideDiv(this.value)" name="productType" id="productType" class="form-select">
+                <option id="selectedOpt" value="selectedOpt" selected>Type Switcher</option>
                 <option value="dvd">DVD-disc</option>
                 <option value="book">Book</option>
                 <option value="furniture">Furniture</option>
             </select>
         </div>
-        <div id="switched" class="form_group switched_group">
-            <div id="size_container">
-                <label>Size (MB): </label>
-                <input class="form-control" placeholder="Size" id="size" type="number" name="size">
+        <div id="dvd">
+            <div class="input-group mb-3">
+                <label>Size (MB)</label>
+                <input name="size" placeholder="Size" type="number" class="form-control">
             </div>
-            <div id="weight_container">
+        </div>
+        <div id="book">
+            <div class="input-group mb-3">
                 <label>Weight (KG)</label>
-                <input class="form-control" placeholder="Weight" id="weight" type="number" name="weight">
+                <input name="weight" placeholder="Weight" type="number" class="form-control">
             </div>
-            <div id="height_container">
+        </div>
+        <div id="furniture" class="input-group mb-3">
+            <div>
                 <label>Height (CM)</label>
-                <input class="form-control" placeholder="Height" id="height" type="number" name="height">
+                <input name="height" placeholder="Height" type="number" class="form-control">
             </div>
-            <div id="width_container">
+            <div>
                 <label>Width (CM)</label>
-                <input class="form-control" placeholder="Width" id="width" type="number" name="width">
+                <input name="width" placeholder="Width" type="number" class="form-control">
             </div>
-            <div id="length_container">
+            <div>
                 <label>Length (CM)</label>
-                <input class="form-control" placeholder="Length" id="length" type="number" name="length">
+                <input name="length" placeholder="Length" type="number" class="form-control">
             </div>
         </div>
         <p id="text"></p>
@@ -121,9 +154,33 @@ VALUE (:sku, :name, :price, :size, :weight, :height, :width, :length)"
 
     </form>
 
+    <script>
+        function hideDiv(option) {
+            if (option == "selectedOpt") {
+                $('#text').html("")
+            }
+            if (option == "dvd") {
+                $('#dvd').show()
+                $('#text').html("Please, provide disc space in MB")
+            } else {
+                $('#dvd').hide()
+            }
+            if (option == "book") {
+                $('#book').show()
+                $('#text').html("Please, provide weight in KG")
+            } else {
+                $('#book').hide()
+            }
+            if (option == "furniture") {
+                $('#furniture').show()
+                $('#text').html("Please, provide dimensions in HxWxL")
 
-    <script src="add.js"></script>
+            } else {
+                $('#furniture').hide()
 
+            }
+        }
+    </script>
 </body>
 
 </html>
